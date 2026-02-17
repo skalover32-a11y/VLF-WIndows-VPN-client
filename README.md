@@ -1,57 +1,85 @@
-# VLF Windows VPN client
+# VLF Secure Connect
 
-Public repository for release versions of the **VLF Windows VPN client**.
+Windows VPN client with subscription support, flexible routing, deep-link import, and built-in auto-update.
 
-> ⚠️ Source code is closed and stored in a private repository.  
-> This repo hosts only signed binaries, release notes and issue tracking.
+- Windows Releases: https://github.com/skalover32-a11y/VLF-WIndows-VPN-client/releases
+- Source code (active development): https://github.com/skalover32-a11y/vlf_dart
+- Website: https://www.vlf-project.tech/
 
-## Overview
+---
 
-VLF Windows VPN client is a desktop application that connects to the VLF VPN infrastructure and provides:
-- Secure encrypted tunnels
-- Automatic server selection
-- Split tunneling and routing profiles
-- Fast switching between VPN modes
+## RU
 
-## Downloads
+### Что это
+**VLF Secure Connect** — VPN-клиент для Windows (и Android в основном репозитории), ориентированный на удобную работу с подписками, быстрый выбор серверов и предсказуемые обновления через GitHub Releases / Google Play.
 
-All release builds are available on the **Releases** page of this repository.
+### Ключевые возможности
+- Поддержка подписок и прямых ссылок.
+- Быстрый импорт:
+  - из буфера,
+  - по ссылке,
+  - через QR,
+  - через deep link `vlf://add/...`.
+- Поддерживаемые типы профилей:
+  - `VLESS`,
+  - `VMess`,
+  - `Trojan`,
+  - `Shadowsocks`,
+  - `Hysteria2 / HY2`,
+  - `TUIC`,
+  - `WireGuard`.
+- Режимы маршрутизации:
+  - **Весь трафик через VPN** (списки идут в обход),
+  - **Весь трафик напрямую** (списки идут через VPN).
+- Исключения:
+  - сайты/домены,
+  - приложения,
+  - пресеты сервисов (YouTube, Instagram, Facebook, X, TikTok, Telegram, WhatsApp, Discord, Google, Spotify, Netflix, Twitch),
+  - домены по странам (TLD-профили).
+- Пинг:
+  - массовая проверка по группе подписки,
+  - проверка пинга конкретного сервера.
+- Автообновление подписок:
+  - при старте приложения,
+  - по интервалу `2/4/6/8/10/12` часов.
+- Блокировка рекламы в туннеле:
+  - `geosite:category-ads-all`.
+- Логи:
+  - просмотр в приложении,
+  - на Windows: скачать / очистить логи.
+- Встроенная проверка обновлений:
+  - Android: Google Play In-App Update,
+  - Windows: GitHub Releases.
 
-- Stable builds: recommended for most users  
-- Beta builds: for testing new features
+### Deep link интеграция
+Поддерживается формат:
+- `vlf://add/<urlencoded_payload>`
+- `vlf://add?url=<urlencoded_payload>`
+- `vlf://add#<urlencoded_payload>`
 
-## Installation
+Примеры:
+- `vlf://add/https%3A%2F%2Fexample.com%2Fsub.txt`
+- `vlf://add?v=url` (рекомендуется `url=...`)
+- `vlf://add#vless%3A%2F%2F...`
 
-1. Download the latest `.exe` installer from the Releases page.
-2. Run the installer and follow the setup wizard.
-3. Launch **VLF Windows VPN client** from the Start menu or desktop shortcut.
+На Windows используется single-instance логика: ссылка передаётся в уже открытое приложение.
 
-## Usage
+### Установка (Windows)
+1. Откройте Releases.
+2. Скачайте установщик вида `VLF_Setup_X.Y.Z.exe`.
+3. Установите приложение.
+4. При необходимости подтвердите запуск с правами администратора (для TUN-сценариев).
 
-1. Log in with your VLF account or activation key.
-2. Choose a server/location or use automatic selection.
-3. Click **Connect** to start the tunnel.
-4. Use routing profiles and exclusions according to your VLF configuration.
+### Сборка из исходников (Windows)
+Требования:
+- Flutter SDK (актуальный stable),
+- Visual Studio Build Tools (Desktop C++),
+- Inno Setup 6 (для инсталлятора).
 
-## Privacy & Security
-
-- The client is designed to work only with trusted VLF servers.
-- No source code is published in this repository.
-- For security questions, contact support using the details below.
-
-## Support
-
-If you encounter issues, please:
-
-1. Check existing GitHub Issues.
-2. Create a new Issue with:
-   - Windows version
-   - Client version
-   - Short description
-   - Steps to reproduce
-   - Logs (if applicable)
-
-## License
-
-VLF Windows VPN client is **closed-source proprietary software**.  
-All rights reserved. Distribution of binaries is allowed only as provided in this repository by the VLF team.
+Команды:
+```powershell
+git clone https://github.com/skalover32-a11y/vlf_dart.git
+cd vlf_dart
+flutter pub get
+pwsh tools/check_release_consistency.ps1 -ProjectRoot .
+pwsh tools/build_and_package.ps1 -Installer
